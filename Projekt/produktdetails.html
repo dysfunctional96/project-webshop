@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produktdetails</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="produkt.js" defer></script>
+    <script src="katalog.js" defer></script>
+    <script src="befuellen.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1>Produktdetails</h1>
+    </header>
+
+    <main>
+        <div id="produktDetails"></div>
+
+        <h2>Ihre Kontaktdaten</h2>
+        <form id="bestellForm" onsubmit="speichereKundendaten(); return false;">
+            <label for="name">Vorname:</label>
+            <input type="text" id="name" name="name" required><br>
+            <label for="nachname">Nachname:</label>
+            <input type="text" id="nachname" name="nachname" required><br>
+            <label for="email">E-Mail:</label>
+            <input type="email" id="email" name="email" required><br>
+            <label for="plz">PLZ:</label>
+            <input type="number" id="plz" name="plz" required><br>
+            <label for="ort">Ort:</label>
+            <input type="text" id="ort" name="ort" required><br>
+            <label for="strasse">Straße:</label>
+            <input type="text" id="strasse" name="strasse" required><br><br>
+            <button type="submit">Bestellen</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Webshop</p>
+    </footer>
+
+    <script>
+        function ladeProduktDetails() {
+            const ausgewählteProduktNummern = JSON.parse(localStorage.getItem('ausgewählteProdukte'));
+            const katalog = katalogBefuellen();
+            const produktDetails = document.getElementById('produktDetails');
+            produktDetails.innerHTML = '';
+
+            ausgewählteProduktNummern.forEach(produktNummer => {
+                const produkt = katalog.produkte.find(p => p.produktNummer == produktNummer);
+                if (produkt) {
+                    produktDetails.innerHTML += produkt.detailansicht();
+                }
+            });
+        }
+
+        function speichereKundendaten() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const nachname = document.getElementById('nachname').value;
+            const plz = document.getElementById('plz').value;
+            const strasse = document.getElementById('strasse').value;
+            const ort = document.getElementById('ort').value;
+            const kundendaten = { name, email, adresse, nachname, plz, ort };
+            localStorage.setItem('kundendaten', JSON.stringify(kundendaten));
+
+            window.location.href = 'bestaetigung.html';
+        }
+
+        window.onload = ladeProduktDetails;
+    </script>
+</body>
+
+</html>
